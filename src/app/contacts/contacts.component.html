@@ -1,0 +1,36 @@
+<table class="table">
+	<thead>
+		<tr>
+			<td>Sr.No</td>
+			<td>First Name</td>
+			<td>Last Name</td>
+			<td>Phone No</td>
+			<td>City</td>
+			<td></td>
+		</tr>
+	</thead>   
+	<tbody>
+		<tr>
+			<td></td>
+			<td><input type="text" #userFname_0 class="form-control" /></td>
+			<td><input type="text" #userLname_0 class="form-control" /></td>
+			<td><input type="text" #userPhone_0 class="form-control" /></td>
+			<td><input type="text" #usercity_0 class="form-control" /></td>
+			<td><button class="btn btn-success" (click)="add(userFname_0.value,userLname_0.value,userPhone_0.value,usercity_0.value);">Add New</button></td>
+		</tr>
+		
+		<tr *ngFor="let user of users">
+			<td><p *ngIf ="user!==editUser">{{user.id}}</p><input [(ngModel)]="user.id" class="form-control" *ngIf ="user==editUser" /></td>
+			<td><p *ngIf ="user!==editUser">{{user.firstName}}</p><input [(ngModel)]="user.firstName" class="form-control" *ngIf ="user==editUser" /></td>
+			<td><p *ngIf ="user!==editUser">{{user.lastName}}</p><input [(ngModel)]="user.lastName" class="form-control" *ngIf ="user==editUser" /></td>
+			<td><p *ngIf ="user!==editUser">{{user.phoneNo}}</p><input [(ngModel)]="user.phoneNo" class="form-control" *ngIf ="user==editUser" /></td>
+			<td><p *ngIf ="user!==editUser">{{user.city}}</p><input [(ngModel)]="user.city" class="form-control" *ngIf ="user==editUser" /></td>
+			<td>
+				<button class="btn btn-success" *ngIf ="user==editUser" (click)="update()">Save</button>
+				<button *ngIf ="user==editUser" class="btn btn-default" (click)="undo(user.id)">Undo</button>
+				<button class="btn btn-info" id="{{user.id}}" (click)="showHidden(user)" *ngIf ="user!==editUser">Edit</button>
+				<button class="btn btn-warning" (click)="delete(user.id)" *ngIf ="user!==editUser">Delete</button>
+			</td>
+		</tr>
+	</tbody> 
+</table>
