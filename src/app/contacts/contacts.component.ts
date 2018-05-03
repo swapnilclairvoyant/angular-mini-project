@@ -1,6 +1,7 @@
 import { Contacts } from './contacts';
 import { ContactsService } from './contacts.service';
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-contacts',
@@ -13,12 +14,12 @@ export class ContactsComponent implements OnInit {
   isOff: boolean;
   users: Contacts[];
   editUser: Contacts;
-  constructor(private userService: ContactsService) { }
+  constructor(private userService: ContactsService,
+              private route: ActivatedRoute) { }
 
   ngOnInit() {
-    this.getUsers();
-    this.isOn = false;
-    this.isOff = true;
+   // this.getUsers();
+    this.users = this.route.snapshot.data['message'].data;
   }
   getUsers(): void {
     this.userService.getUsers().subscribe(users => {
@@ -27,24 +28,19 @@ export class ContactsComponent implements OnInit {
     });
   }
 
-  add(firstName: string, lastName: string, phoneNo: number, city: string): void {
+  add(id: number, firstName: string, lastName: string, phoneNo: number, city: string): void {
     this.editUser = undefined;
     firstName = firstName.trim();
     lastName = lastName.trim();
     phoneNo = phoneNo;
     city = city.trim();
     const newUser: Contacts = { firstName, lastName, phoneNo, city } as Contacts;
-    console.log('Array Size: ' + this.users[this.users.length - 1].id);
-    newUser.id = this.users[this.users.length - 1].id + 1;
-    this.users.push(newUser);
     console.log('User Array : ', this.users);
-    this.userService.addUser(newUser).subscribe();
+    this.userService.addUser(newUser).subscribe(user => this.users.push(user));
   }
 
   showHidden(user) {
     this.editUser = user;
-    // this.isOff = false;
-    // this.isOn = true;
   }
 
   undo(id: number): void {
@@ -53,23 +49,28 @@ export class ContactsComponent implements OnInit {
   }
 
   delete(id: number): void {
-    this.userService.deleteUser(id).subscribe();
+    this.userService.deleteUser(id).subscribe( user => this.undo(id) );
     console.log('User Array : ', this.users);
-    this.undo(id);
+    // this.undo(id);
   }
 
   update() {
     console.log('Edited User: ', this.editUser);
     if (this.editUser) {
       this.userService.updateUser(this.editUser)
-        .subscribe(users => {
-          console.log('Functional User: ', users);
-          const ix = users ? this.users.findIndex(h => h.id === users.id) : -1;
-          if (ix > -1) {
-            console.log('Functional User1: ', users);
-            this.users[ix] = users;
+        .subscribe(
+          users => {
+            console.log('Functional User: ', users);
+            const ix = users ? this.users.findIndex(h => h.id === users.id) : -1;
+            if (ix > -1) {
+              console.log('Functional User1: ', users);
+              this.users[ix] = users;
           }
-        });
+        },
+        err => {
+          console.log(" ----->>> " + err);
+        }
+       );
       this.editUser = undefined;
     }
   }

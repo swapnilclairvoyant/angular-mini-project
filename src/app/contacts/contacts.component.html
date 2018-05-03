@@ -16,7 +16,7 @@
 			<td><input type="text" #userLname_0 class="form-control" /></td>
 			<td><input type="text" #userPhone_0 class="form-control" /></td>
 			<td><input type="text" #usercity_0 class="form-control" /></td>
-			<td><button class="btn btn-success" (click)="add(userFname_0.value,userLname_0.value,userPhone_0.value,usercity_0.value);">Add New</button></td>
+			<td><button class="btn btn-success" (click)="add(0,userFname_0.value,userLname_0.value,userPhone_0.value,usercity_0.value);">Add New</button></td>
 		</tr>
 		
 		<tr *ngFor="let user of users">

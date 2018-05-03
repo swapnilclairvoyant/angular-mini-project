@@ -26,7 +26,7 @@ import { FormsModule } from '@angular/forms';
     FormsModule
   ],
   providers: [HttpErrorHandler,
-              MessageService,
+              MessageService
 ],
   bootstrap: [AppComponent]
 })
